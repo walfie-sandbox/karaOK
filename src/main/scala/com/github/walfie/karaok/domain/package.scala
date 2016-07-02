@@ -29,8 +29,8 @@ package com.github.walfie.karaok.domain
    ```
 */
 
-case class SearchResult[T](
-  searchResult: Seq[T],
+case class SearchResponse(
+  searchResult: Seq[Song],
   totalCount:   String,
   totalPage:    String
 )

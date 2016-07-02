@@ -10,7 +10,7 @@ libraryDependencies ++= Seq(
   aar("org.macroid" %% "macroid" % "2.0.0-M4"),
   "com.squareup.okhttp3" % "okhttp" % "3.3.1",
   "com.typesafe.play" %% "play-json" % "2.5.4",
-  "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+  "org.scalatest" %% "scalatest" % "2.2.6" % "it,test"
 )
 
 proguardScala in Android := true
@@ -23,4 +23,7 @@ scalacOptions ++=
     "-deprecation", "-feature", "-unchecked", "-Xlint",
     "-P:wartremover:traverser:macroid.warts.CheckUi"
   ) ++ dependencyClasspath.in(Compile).value.files.map("-P:wartremover:cp:" + _.toURI.toURL)
+
+configs(IntegrationTest)
+Defaults.itSettings
 

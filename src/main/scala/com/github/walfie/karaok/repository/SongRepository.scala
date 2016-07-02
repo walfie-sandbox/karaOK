@@ -1,6 +1,7 @@
 package com.github.walfie.karaok.repository
 
 import com.github.walfie.karaok.domain._
+import com.github.walfie.karaok.domain.json._
 import com.github.walfie.karaok.util.http._
 import okhttp3._
 import play.api.libs.json._
@@ -11,7 +12,7 @@ trait SongRepository {
     query:    String,
     page:     Int,
     serialNo: Option[String]
-  ): Future[Seq[Song]]
+  ): Future[SearchResponse]
 }
 
 class SongRepositoryHttp(
@@ -24,9 +25,7 @@ class SongRepositoryHttp(
     query:    String,
     page:     Int,
     serialNo: Option[String]
-  ): Future[Seq[Song]] = {
-    import com.github.walfie.karaok.domain.json.SongFormat
-
+  ): Future[SearchResponse] = {
     val json = Json.obj(
       "categoryCd" -> "020000",
       "page" -> page.toString,
@@ -40,7 +39,7 @@ class SongRepositoryHttp(
 
     val request = new Request.Builder().url(baseUrl).post(body).build()
 
-    http.asyncJson[Seq[Song]](request)
+    http.asyncJson[SearchResponse](request)
   }
 }
 
