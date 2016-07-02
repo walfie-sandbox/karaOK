@@ -1,5 +1,7 @@
 package com.github.walfie.karaok.domain
 
+import org.joda.time.DateTime
+
 case class KaraokeModel(id: String, name: String)
 
 object KaraokeModel {
@@ -36,12 +38,12 @@ object KaraokeModel {
 */
 
 case class SearchResponse(
-  searchResult: Seq[Song],
+  searchResult: Seq[SearchResult],
   totalCount:   String,
   totalPage:    String
 )
 
-case class Song(
+case class SearchResult(
   artistId:          String,
   artistName:        String,
   distEnd:           String,
@@ -58,5 +60,15 @@ case class Song(
   reqNo:             String,
   songName:          String,
   titleFirstKana:    String
+)
+
+case class Artist(id: String, name: String)
+case class Song(
+  id:        String,
+  name:      String,
+  artist:    Artist,
+  startDate: DateTime,
+  endDate:   Option[DateTime],
+  firstBars: String
 )
 

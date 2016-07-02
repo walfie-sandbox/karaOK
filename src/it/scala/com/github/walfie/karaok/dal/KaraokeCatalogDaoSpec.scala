@@ -1,4 +1,4 @@
-package com.github.walfie.karaok.repository
+package com.github.walfie.karaok.dal
 
 import com.github.walfie.karaok.domain.KaraokeModel
 import okhttp3.OkHttpClient
@@ -7,7 +7,7 @@ import org.scalatest.concurrent._
 import org.scalatest.time._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class SongRepositorySpec extends SongRepositorySpecHelpers
+class KaraokeCatalogDaoSpec extends KaraokeCatalogDaoSpecHelpers
     with WordSpecLike with Matchers with ScalaFutures {
 
   override implicit val patienceConfig = PatienceConfig(
@@ -42,7 +42,7 @@ class SongRepositorySpec extends SongRepositorySpecHelpers
   }
 }
 
-trait SongRepositorySpecHelpers {
-  val repo = new SongRepositoryHttp(new OkHttpClient())
+trait KaraokeCatalogDaoSpecHelpers {
+  val repo = new OkHttpKaraokeCatalogDao(new OkHttpClient())
 }
 

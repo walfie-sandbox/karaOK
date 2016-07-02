@@ -16,8 +16,12 @@ package object http {
         override def onResponse(call: Call, response: Response): Unit = {
           if (response.isSuccessful)
             promise.success(response)
-          else // TODO: better error
-            promise.failure(new IOException("Unexpected response " + response))
+          else {
+            response.body.close()
+            promise.failure { // TODO: better error
+              new IOException("Unexpected response " + response)
+            }
+          }
         }
 
         override def onFailure(call: Call, e: IOException): Unit = promise.failure(e)

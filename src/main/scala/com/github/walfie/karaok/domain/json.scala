@@ -7,7 +7,7 @@ package object json {
   implicit def SearchResponseFormat: Format[SearchResponse] =
     Json.format[SearchResponse]
 
-  implicit val SongFormat: Format[Song] =
-    Json.format[Song]
+  implicit val SongFormat: Format[SearchResult] =
+    Json.format[SearchResult]
 }
 
