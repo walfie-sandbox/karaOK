@@ -15,9 +15,9 @@ class SongRepositorySpec extends SongRepositorySpecHelpers
     interval = Span(50, Millis)
   )
 
-  "findByTitle" should {
+  "findBySongName" should {
     "return matching songs" in {
-      val response = repo.findByTitle("アイドル活動").futureValue
+      val response = repo.findBySongName("アイドル活動").futureValue
 
       response.searchResult.map(_.songName) should contain allOf(
         "アイドル活動!", "アイドル活動!(Ver.Rock)"
@@ -26,14 +26,14 @@ class SongRepositorySpec extends SongRepositorySpecHelpers
 
     "filter by karaoke machine model" in {
       // This song is available on the top tier machines
-      val response1 = repo.findByTitle("wake up my music").futureValue
+      val response1 = repo.findBySongName("wake up my music").futureValue
       exactly(1, response1.searchResult) should have(
         'songName ("Wake up my music"),
         'artistName ("りさ、えいみ")
       )
 
       // PremierDAM doesn't have this song...
-      val response2 = repo.findByTitle(
+      val response2 = repo.findBySongName(
         query = "wake up my music",
         serialNo = Some(KaraokeModel.PremierDAM.id)
       ).futureValue

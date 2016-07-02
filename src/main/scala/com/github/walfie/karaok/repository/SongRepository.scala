@@ -8,7 +8,7 @@ import play.api.libs.json._
 import scala.concurrent.{ExecutionContext, Future}
 
 trait SongRepository {
-  def findByTitle(
+  def findBySongName(
     query:    String,
     page:     Int,
     serialNo: Option[String]
@@ -21,7 +21,7 @@ class SongRepositoryHttp(
   // TODO: Don't hardcode this in here
   val baseUrl = "https://denmoku.clubdam.com/dkdenmoku/DkDamSearchServlet"
 
-  def findByTitle(
+  def findBySongName(
     query:    String,
     page:     Int            = 1,
     serialNo: Option[String] = None
