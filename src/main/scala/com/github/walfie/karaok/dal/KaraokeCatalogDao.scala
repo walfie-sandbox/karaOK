@@ -10,12 +10,12 @@ import scala.concurrent.{ExecutionContext, Future}
 trait KaraokeCatalogDao {
   import KaraokeCatalogDao.MatchType
 
-  def findBySongName(
+  def findSongsByName(
     query:     String,
     matchType: MatchType,
     page:      Int,
     serialNo:  Option[String]
-  ): Future[SearchResponse]
+  ): Future[Page[Song]]
 }
 
 object KaraokeCatalogDao {
@@ -34,12 +34,12 @@ class OkHttpKaraokeCatalogDao(
   // TODO: Don't hardcode this in here
   val baseUrl = "https://denmoku.clubdam.com/dkdenmoku/DkDamSearchServlet"
 
-  def findBySongName(
+  def findSongsByName(
     query:     String,
     matchType: MatchType      = MatchType.StartsWith,
     page:      Int            = 1,
     serialNo:  Option[String] = None
-  ): Future[SearchResponse] = {
+  ): Future[Page[Song]] = {
     // TODO: Figure out what some of these params mean
     val json = Json.obj(
       "appVer" -> "2.1.0",
@@ -55,7 +55,8 @@ class OkHttpKaraokeCatalogDao(
 
     val request = new Request.Builder().url(baseUrl).post(body).build()
 
-    http.asyncJson[SearchResponse](request)
+    implicit val format: Format[Page[Song]] = pageFormat(page)
+    http.asyncJson[Page[Song]](request)
   }
 }
 

@@ -1,6 +1,6 @@
 package com.github.walfie.karaok.dal
 
-import com.github.walfie.karaok.domain.KaraokeModel
+import com.github.walfie.karaok.domain.{Artist, KaraokeModel}
 import okhttp3.OkHttpClient
 import org.scalatest._
 import org.scalatest.concurrent._
@@ -15,29 +15,29 @@ class KaraokeCatalogDaoSpec extends KaraokeCatalogDaoSpecHelpers
     interval = Span(50, Millis)
   )
 
-  "findBySongName" should {
+  "findSongsByName" should {
     "return matching songs" in {
-      val response = repo.findBySongName("アイドル活動").futureValue
+      val response = repo.findSongsByName("アイドル活動").futureValue
 
-      response.searchResult.map(_.songName) should contain allOf(
+      response.items.map(_.name) should contain allOf(
         "アイドル活動!", "アイドル活動!(Ver.Rock)"
       )
     }
 
     "filter by karaoke machine model" in {
       // This song is available on the top tier machines
-      val response1 = repo.findBySongName("wake up my music").futureValue
-      exactly(1, response1.searchResult) should have(
-        'songName ("Wake up my music"),
-        'artistName ("りさ、えいみ")
+      val response1 = repo.findSongsByName("wake up my music").futureValue
+      exactly(1, response1.items) should have(
+        'name ("Wake up my music"),
+        'artist (Artist("96028", "りさ、えいみ"))
       )
 
       // PremierDAM doesn't have this song...
-      val response2 = repo.findBySongName(
+      val response2 = repo.findSongsByName(
         query = "wake up my music",
         serialNo = Some(KaraokeModel.PremierDAM.id)
       ).futureValue
-      response2.searchResult shouldBe empty
+      response2.items shouldBe empty
     }
   }
 }
