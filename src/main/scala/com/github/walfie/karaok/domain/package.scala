@@ -1,5 +1,11 @@
 package com.github.walfie.karaok.domain
 
+case class KaraokeModel(id: String, name: String)
+
+object KaraokeModel {
+  val PremierDAM = KaraokeModel("AB316238", "Premier DAM")
+}
+
 /* Sample JSON response:
    ```
    {

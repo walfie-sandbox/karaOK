@@ -23,16 +23,18 @@ class SongRepositoryHttp(
 
   def findByTitle(
     query:    String,
-    page:     Int,
-    serialNo: Option[String]
+    page:     Int            = 1,
+    serialNo: Option[String] = None
   ): Future[SearchResponse] = {
+    // TODO: Figure out what some of these params mean
     val json = Json.obj(
+      "appVer" -> "2.1.0",
       "categoryCd" -> "020000",
-      "page" -> page.toString,
-      "songMatchType" -> "0",
-      "songName" -> query,
       "deviceId" -> "",
-      "serialNo" -> serialNo
+      "page" -> page.toString,
+      "serialNo" -> serialNo,
+      "songMatchType" -> "0",
+      "songName" -> query
     )
 
     val body = RequestBody.create(JsonMediaType, Json.stringify(json))
