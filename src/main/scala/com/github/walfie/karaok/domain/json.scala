@@ -3,15 +3,37 @@ package com.github.walfie.karaok.domain
 import com.github.walfie.karaok.util.json.JsPathOps
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import scala.language.implicitConversions
+
+/* Sample JSON response:
+   ```
+   {
+     "searchResult": [
+     {
+       "artistId": "91801",
+       "artistName": "わか、ふうり、すなお from STAR☆ANIS",
+       "distEnd": "99999999",
+       "distStart": "20130330",
+       "firstBars": "",
+       "funcAnimePicture": "",
+       "funcPersonPicture": "",
+       "funcRecording": "",
+       "funcScore": "",
+       "indicationMonth": "",
+       "myKey": "0",
+       "orgKey": "0",
+       "programTitle": "",
+       "reqNo": "360715",
+       "songName": "アイドル活動!",
+       "titleFirstKana": ""
+     }
+     ],
+     "totalCount": "2",
+     "totalPage": "1"
+   }
+   ```
+*/
 
 package object json {
-  implicit def SearchResponseFormat: Format[SearchResponse] =
-    Json.format[SearchResponse]
-
-  implicit val SearchResultFormat: Format[SearchResult] =
-    Json.format[SearchResult]
-
   implicit val ArtistFormat: Format[Artist] = (
     (__ \ 'artistId).format[String] ~
     (__ \ 'artistName).format[String]

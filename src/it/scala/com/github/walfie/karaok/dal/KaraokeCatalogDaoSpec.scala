@@ -19,7 +19,7 @@ class KaraokeCatalogDaoSpec extends KaraokeCatalogDaoSpecHelpers
     "return matching songs" in {
       val response = repo.findSongsByName("アイドル活動").futureValue
 
-      response.items.map(_.name) should contain allOf(
+      response.items.map(_.name) should contain allOf (
         "アイドル活動!", "アイドル活動!(Ver.Rock)"
       )
     }
@@ -28,8 +28,8 @@ class KaraokeCatalogDaoSpec extends KaraokeCatalogDaoSpecHelpers
       // This song is available on the top tier machines
       val response1 = repo.findSongsByName("wake up my music").futureValue
       exactly(1, response1.items) should have(
-        'name ("Wake up my music"),
-        'artist (Artist("96028", "りさ、えいみ"))
+        'name("Wake up my music"),
+        'artist(Artist("96028", "りさ、えいみ"))
       )
 
       // PremierDAM doesn't have this song...
@@ -46,9 +46,9 @@ class KaraokeCatalogDaoSpec extends KaraokeCatalogDaoSpecHelpers
       val response = repo.findSongsByArtist("107891").futureValue
 
       exactly(1, response.items) should have(
-        'id ("372915"),
-        'name ("Passion flower"),
-        'artist (Artist("107891", "みほ・もな from AIKATSU☆STARS!"))
+        'id("372915"),
+        'name("Passion flower"),
+        'artist(Artist("107891", "みほ・もな from AIKATSU☆STARS!"))
       )
     }
   }
