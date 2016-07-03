@@ -41,6 +41,18 @@ class KaraokeCatalogDaoSpec extends KaraokeCatalogDaoSpecHelpers
     }
   }
 
+  "findSongsByArtist" should {
+    "return matching songs" in {
+      val response = repo.findSongsByArtist("107891").futureValue
+
+      exactly(1, response.items) should have(
+        'id ("372915"),
+        'name ("Passion flower"),
+        'artist (Artist("107891", "みほ・もな from AIKATSU☆STARS!"))
+      )
+    }
+  }
+
   "findArtistsByName" should {
     "return matching artists" in {
       val response = repo.findArtistsByName("aikatsu").futureValue

@@ -19,9 +19,15 @@ trait KaraokeCatalogDao {
 
   def findArtistsByName(
     query:     String,
-    matchType: MatchType = MatchType.StartsWith,
-    page:      Int       = 1
+    matchType: MatchType,
+    page:      Int
   ): Future[Page[Artist]]
+
+  def findSongsByArtist(
+    artistId: String,
+    page:     Int,
+    serialNo: Option[String]
+  ): Future[Page[Song]]
 }
 
 object KaraokeCatalogDao {
@@ -78,6 +84,21 @@ class OkHttpKaraokeCatalogDao(
 
     implicit val format: Format[Page[Artist]] = pageFormat(page)
     http.asyncPostJson[Page[Artist]](baseUrl, postBody)
+  }
+
+  def findSongsByArtist(
+    artistId: String,
+    page:     Int            = 1,
+    serialNo: Option[String] = None
+  ): Future[Page[Song]] = {
+    val postBody = baseJson ++ Json.obj(
+      "artistId" -> artistId,
+      "categoryCd" -> "010000",
+      "page" -> page.toString
+    )
+
+    implicit val format: Format[Page[Song]] = pageFormat(page)
+    http.asyncPostJson[Page[Song]](baseUrl, postBody)
   }
 }
 
