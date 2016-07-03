@@ -16,6 +16,12 @@ trait KaraokeCatalogDao {
     page:      Int,
     serialNo:  Option[String]
   ): Future[Page[Song]]
+
+  def findArtistsByName(
+    query:     String,
+    matchType: MatchType = MatchType.StartsWith,
+    page:      Int       = 1
+  ): Future[Page[Artist]]
 }
 
 object KaraokeCatalogDao {
@@ -34,6 +40,11 @@ class OkHttpKaraokeCatalogDao(
   // TODO: Don't hardcode this in here
   val baseUrl = "https://denmoku.clubdam.com/dkdenmoku/DkDamSearchServlet"
 
+  val baseJson = Json.obj(
+    "appVer" -> "2.1.0",
+    "deviceId" -> ""
+  )
+
   def findSongsByName(
     query:     String,
     matchType: MatchType      = MatchType.StartsWith,
@@ -41,22 +52,32 @@ class OkHttpKaraokeCatalogDao(
     serialNo:  Option[String] = None
   ): Future[Page[Song]] = {
     // TODO: Figure out what some of these params mean
-    val json = Json.obj(
-      "appVer" -> "2.1.0",
+    val postBody = baseJson ++ Json.obj(
       "categoryCd" -> "020000",
-      "deviceId" -> "",
       "page" -> page.toString,
       "serialNo" -> serialNo,
       "songMatchType" -> matchType.value,
       "songName" -> query
     )
 
-    val body = RequestBody.create(JsonMediaType, Json.stringify(json))
-
-    val request = new Request.Builder().url(baseUrl).post(body).build()
-
     implicit val format: Format[Page[Song]] = pageFormat(page)
-    http.asyncJson[Page[Song]](request)
+    http.asyncPostJson[Page[Song]](baseUrl, postBody)
+  }
+
+  def findArtistsByName(
+    query:     String,
+    matchType: MatchType = MatchType.StartsWith,
+    page:      Int       = 1
+  ): Future[Page[Artist]] = {
+    val postBody = baseJson ++ Json.obj(
+      "artistMatchType" -> matchType.value,
+      "artistName" -> query,
+      "categoryCd" -> "010000",
+      "page" -> page.toString
+    )
+
+    implicit val format: Format[Page[Artist]] = pageFormat(page)
+    http.asyncPostJson[Page[Artist]](baseUrl, postBody)
   }
 }
 

@@ -40,6 +40,14 @@ class KaraokeCatalogDaoSpec extends KaraokeCatalogDaoSpecHelpers
       response2.items shouldBe empty
     }
   }
+
+  "findArtistsByName" should {
+    "return matching artists" in {
+      val response = repo.findArtistsByName("aikatsu").futureValue
+
+      response.items.map(_.name) should contain("AIKATSU☆STARS!")
+    }
+  }
 }
 
 trait KaraokeCatalogDaoSpecHelpers {

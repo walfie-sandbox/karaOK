@@ -8,11 +8,11 @@ import play.api.libs.json._
 package object http {
   val JsonMediaType = MediaType.parse("application/json; charset=utf-8");
 
-  implicit class OkHttpClientOps(val http: OkHttpClient) extends AnyVal {
+  implicit class OkHttpClientOps(val client: OkHttpClient) extends AnyVal {
     def async(request: Request): Future[Response] = {
       val promise = Promise[Response]
 
-      http.newCall(request).enqueue(new Callback() {
+      client.newCall(request).enqueue(new Callback() {
         override def onResponse(call: Call, response: Response): Unit = {
           if (response.isSuccessful)
             promise.success(response)
@@ -37,6 +37,17 @@ package object http {
           case JsError(errors) => Future.failed(JsResultException(errors))
         }
       }
+    }
+
+    def asyncPostJson[T: Reads](
+      url:      String,
+      postBody: JsValue
+    )(implicit ec: ExecutionContext): Future[T] = {
+      val body = RequestBody.create(JsonMediaType, Json.stringify(postBody))
+
+      val request = new Request.Builder().url(url).post(body).build()
+
+      client.asyncJson[T](request)
     }
   }
 }
