@@ -14,7 +14,8 @@ case class Song(
   id:        String,
   name:      String,
   artist:    Artist,
-  firstBars: String
+  firstBars: String,
+  dateAdded: DateTime
 )
 
 case class Page[T](
@@ -27,6 +28,6 @@ case class Page[T](
     if (pageNumber <= 1) None else Some(pageNumber - 1)
 
   def nextPage(): Option[Int] =
-    if (pageNumber == totalPages) None else Some(pageNumber + 1)
+    if (pageNumber >= totalPages) None else Some(pageNumber + 1)
 }
 

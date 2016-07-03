@@ -1,6 +1,7 @@
 package com.github.walfie.karaok.domain
 
 import com.github.walfie.karaok.util.json.JsPathOps
+import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -34,6 +35,16 @@ import play.api.libs.json._
 */
 
 package object json {
+  /**
+    * API dates are `yyyyMMdd`, though end dates (which we don't care about)
+    * are often "99999999". For songs, start date always seems to be valid,
+    * but adding a default just in case.
+    */
+  private implicit val DateFormat: Format[DateTime] = Format(
+    Reads.jodaDateReads("yyyyMMdd").orElse(Reads.pure(new DateTime(0))),
+    Writes.jodaDateWrites("yyyyMMdd")
+  )
+
   implicit val ArtistFormat: Format[Artist] = (
     (__ \ 'artistId).format[String] ~
     (__ \ 'artistName).format[String]
@@ -43,7 +54,8 @@ package object json {
     (__ \ 'reqNo).format[String] ~
     (__ \ 'songName).format[String] ~
     __.format[Artist] ~
-    (__ \ 'firstBars).format[String]
+    (__ \ 'firstBars).format[String] ~
+    (__ \ 'distStart).format[DateTime]
   )(Song.apply, unlift(Song.unapply))
 
   def pageFormat[T: Format](pageNumber: Int): Format[Page[T]] = (

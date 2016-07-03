@@ -2,6 +2,7 @@ package com.github.walfie.karaok.dal
 
 import com.github.walfie.karaok.domain.{Artist, KaraokeModel}
 import okhttp3.OkHttpClient
+import org.joda.time.DateTime
 import org.scalatest._
 import org.scalatest.concurrent._
 import org.scalatest.time._
@@ -29,7 +30,8 @@ class KaraokeCatalogDaoSpec extends KaraokeCatalogDaoSpecHelpers
       val response1 = repo.findSongsByName("wake up my music").futureValue
       exactly(1, response1.items) should have(
         'name("Wake up my music"),
-        'artist(Artist("96028", "りさ、えいみ"))
+        'artist(Artist("96028", "りさ、えいみ")),
+        'dateAdded(new DateTime(2013, 11, 2, 0, 0))
       )
 
       // PremierDAM doesn't have this song...
